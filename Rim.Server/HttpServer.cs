@@ -201,7 +201,7 @@ namespace Rim.Server
             //handle request
             if (request.IsWebSocket)
             {
-                WebSocketClient client = SocketRequestHandler.HandshakeClient(this, request, tcp);
+                ServerSocket client = SocketRequestHandler.HandshakeClient(this, request, tcp);
                 client.Start();
             }
             else

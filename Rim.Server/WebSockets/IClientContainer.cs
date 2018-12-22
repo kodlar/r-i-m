@@ -8,11 +8,11 @@ namespace Rim.Server.WebSockets
 
         int Count();
 
-        void Add(WebSocketClient client);
+        void Add(ServerSocket client);
 
-        void Remove(WebSocketClient client);
+        void Remove(ServerSocket client);
 
-        IEnumerable<WebSocketClient> List();
+        IEnumerable<ServerSocket> List();
 
     }
 

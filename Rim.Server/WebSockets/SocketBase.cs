@@ -1,73 +1,29 @@
-﻿using Rim.Server.WebSockets;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Net.Security;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
 
-namespace Rim.Server
+namespace Rim.Server.WebSockets
 {
-    public abstract class WebSocketClient
+    public abstract class SocketBase
     {
 
-        #region Events - Properties
-        
-        public HttpServer Server { get; private set; }
-        public HttpRequest Request { get; private set; }
+        #region Properties
 
-        internal TcpClient Client { get; private set; }
-        internal Stream Stream { get; private set; }
+        internal TcpClient Client { get; set; }
 
-        public bool Connected { get; private set; }
+        internal Stream Stream { get; set; }
 
-        private Timer PingTimer { get; set; }
+        public bool IsConnected { get; protected set; }
 
         #endregion
 
-        protected WebSocketClient(HttpServer server, HttpRequest request, TcpClient client)
-        {
-            Server = server;
-            Request = request;
-            Client = client;
-            Connected = true;
+        #region Methods
 
-            Stream networkStream = client.GetStream();
-
-            if (server.Options.UseSecureConnection)
-                Stream = new SslStream(networkStream, true);
-            else
-                Stream = networkStream;
-
-        }
-
-        internal void Start()
-        {
-            if (Server.Container != null)
-                Server.Container.Add(this);
-
-            if (Server.Options.PingInterval > 0)
-            {
-                PingTimer = new Timer(Server.Options.PingInterval);
-                PingTimer.AutoReset = true;
-                PingTimer.Elapsed += (sender, e) =>
-                {
-                    if (Connected)
-                        Ping();
-                };
-
-                PingTimer.Start();
-            }
-
-            Connected = true;
-            OnConnected();
-
-            Read();
-        }
-        
-        private void Read()
+        protected void Read()
         {
             byte[] buffer = new byte[512];
 
@@ -75,7 +31,7 @@ namespace Rim.Server
 
             try
             {
-                while (Connected)
+                while (IsConnected)
                 {
                     int read = Stream.Read(buffer, 0, buffer.Length);
                     if (read == 0)
@@ -122,7 +78,6 @@ namespace Rim.Server
             }
             catch (Exception ex)
             {
-                Server.Logger.Log(ex);
                 Disconnect();
             }
 
@@ -137,7 +92,6 @@ namespace Rim.Server
             }
             catch (Exception ex)
             {
-                Server.Logger.Log(ex);
                 Disconnect();
             }
         }
@@ -148,43 +102,19 @@ namespace Rim.Server
             {
                 Stream.Write(preparedData, 0, preparedData.Length);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                Server.Logger.Log(ex);
                 Disconnect();
             }
         }
         
-        public void Ping()
+        public virtual void Disconnect()
         {
-            try
-            {
-                byte[] data = PackageWriter.CreatePing();
-                Stream.Write(data, 0, data.Length);
-            }
-            catch (Exception ex)
-            {
-                Server.Logger.Log(ex);
-                Disconnect();
-            }
-        }
-
-        public void Disconnect()
-        {
-            bool warn = Connected;
-            try
-            {
-                if (PingTimer != null)
-                {
-                    PingTimer.Stop();
-                    PingTimer.Dispose();
-                }
-            }
-            catch { }
+            bool warn = IsConnected;
 
             try
             {
-                Connected = false;
+                IsConnected = false;
                 Stream.Dispose();
                 Client.Close();
                 Client = null;
@@ -193,20 +123,22 @@ namespace Rim.Server
             catch { }
 
             OnDisconnected();
-
-            if (Server.Container != null)
-                Server.Container.Remove(this);
-
         }
+
+        #endregion
 
         #region Abstract Methods
 
-        public abstract void OnConnected();
-        public abstract void OnDisconnected();
-        public abstract void OnMessageReceived(string message);
-        public abstract void OnBinaryReceived(byte[] payload);
+        protected abstract void OnConnected();
+
+        protected abstract void OnDisconnected();
+
+        protected abstract void OnMessageReceived(string message);
+
+        protected abstract void OnBinaryReceived(byte[] payload);
 
         #endregion
+
 
     }
 }

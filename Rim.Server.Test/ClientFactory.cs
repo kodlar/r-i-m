@@ -8,7 +8,7 @@ namespace Rim.Server.Test
 {
     public class ClientFactory : IClientFactory
     {
-        public WebSocketClient Create(HttpServer server, HttpRequest request, TcpClient client)
+        public ServerSocket Create(HttpServer server, HttpRequest request, TcpClient client)
         {
             return new DemoClient(server, request, client);
         }

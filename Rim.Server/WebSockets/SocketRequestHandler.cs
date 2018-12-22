@@ -10,7 +10,7 @@ namespace Rim.Server.WebSockets
     internal static class SocketRequestHandler
     {
 
-        internal static WebSocketClient HandshakeClient(HttpServer server, HttpRequest request, TcpClient tcp)
+        internal static ServerSocket HandshakeClient(HttpServer server, HttpRequest request, TcpClient tcp)
         {
             if (!request.IsWebSocket)
                 return null;
@@ -23,7 +23,7 @@ namespace Rim.Server.WebSockets
 
             stream.Write(response, 0, response.Length);
 
-            WebSocketClient client = server.ClientFactory.Create(server, request, tcp);
+            ServerSocket client = server.ClientFactory.Create(server, request, tcp);
             return client;
         }
 

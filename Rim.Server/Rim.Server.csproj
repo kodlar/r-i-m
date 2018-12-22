@@ -2,6 +2,15 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
+    <Authors>Mehmet Helvacıköylü</Authors>
+    <Product>Rim.Server</Product>
+    <Description>Advanced WebSocket Server includes basic Http Server</Description>
+    <RepositoryUrl>https://github.com/mhelvacikoylu/rimserver.git</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/mhelvacikoylu/rimserver</PackageProjectUrl>
+    <PackageLicenseUrl></PackageLicenseUrl>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <NeutralLanguage>en</NeutralLanguage>
   </PropertyGroup>
 
   <ItemGroup>

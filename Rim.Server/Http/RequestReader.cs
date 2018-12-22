@@ -16,6 +16,7 @@ namespace Rim.Server.Http
 
             //read first line
             string[] headline = lines[0].Split(' ');
+            
             request.Method = headline[0];
             request.Path = headline[1];
             

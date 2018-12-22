@@ -4,14 +4,14 @@ namespace Rim.Server.WebSockets
 {
     public class ClientContainer : IClientContainer
     {
-        private List<WebSocketClient> Clients { get; set; }
+        private List<ServerSocket> Clients { get; set; }
 
         public ClientContainer()
         {
-            Clients = new List<WebSocketClient>();
+            Clients = new List<ServerSocket>();
         }
 
-        public void Add(WebSocketClient client)
+        public void Add(ServerSocket client)
         {
             lock (Clients)
                 Clients.Add(client);
@@ -22,18 +22,18 @@ namespace Rim.Server.WebSockets
             return Clients.Count;
         }
 
-        public IEnumerable<WebSocketClient> List()
+        public IEnumerable<ServerSocket> List()
         {
-            List<WebSocketClient> clients = new List<WebSocketClient>();
+            List<ServerSocket> clients = new List<ServerSocket>();
 
             lock (Clients)
-                foreach (WebSocketClient client in Clients)
+                foreach (ServerSocket client in Clients)
                     clients.Add(client);
 
             return clients;
         }
 
-        public void Remove(WebSocketClient client)
+        public void Remove(ServerSocket client)
         {
             lock (Clients)
                 Clients.Remove(client);
