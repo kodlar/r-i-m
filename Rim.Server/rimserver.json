@@ -1,0 +1,9 @@
+{
+  "Port": 80,
+  "PingInterval": 60000,
+  "MaximumRequestLength": 10240,
+  "MaximumPendingConnections" : 100,
+  "UseSecureConnection": false,
+  "CertificateFilename": null,
+  "DebugErrors": false
+}
