@@ -69,9 +69,8 @@ namespace Rim.Server
                 byte[] data = PackageWriter.CreatePing();
                 Stream.Write(data, 0, data.Length);
             }
-            catch (Exception ex)
+            catch
             {
-                Server.Logger.Log(ex);
                 Disconnect();
             }
         }
