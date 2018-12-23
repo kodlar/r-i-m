@@ -89,6 +89,7 @@ namespace Rim.Server.WebSockets
                         throw new InvalidOperationException("Handshaking error, Invalid Key");
                 }
 
+                OnConnected();
                 Task.Factory.StartNew(Read);
                 return true;
             }
