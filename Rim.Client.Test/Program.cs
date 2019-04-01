@@ -31,7 +31,7 @@ namespace Rim.Client.Test
                  Console.WriteLine("m: " + message);
              };
 
-            socket.Connect("ws://127.0.0.1/test");
+            socket.Connect("ws://127.0.0.1:83/test");
 
             while (true)
             {
